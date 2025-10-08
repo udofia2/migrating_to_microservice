@@ -1,0 +1,136 @@
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: youverify_ecommerce_mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: youverify
+      MONGO_INITDB_ROOT_PASSWORD: youverify123
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - youverify_ecommerce_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: youverify_ecommerce_rabbitmq
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - youverify_ecommerce_network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  customer-service:
+    build: ./customer-service
+    container_name: customer_service
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
+      NODE_ENV: development
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - youverify_ecommerce_network
+    volumes:
+      - ./customer-service:/app
+      - /app/node_modules
+
+  product-service:
+    build: ./product-service
+    container_name: product_service
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
+      NODE_ENV: development
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - youverify_ecommerce_network
+    volumes:
+      - ./product-service:/app
+      - /app/node_modules
+
+  order-service:
+    build: ./order-service
+    container_name: order_service
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
+      PAYMENT_SERVICE_URL: http://payment-service:3004
+      NODE_ENV: development
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - youverify_ecommerce_network
+    volumes:
+      - ./order-service:/app
+      - /app/node_modules
+
+  payment-service:
+    build: ./payment-service
+    container_name: payment_service
+    ports:
+      - "3004:3004"
+    environment:
+      PORT: 3004
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      NODE_ENV: development
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - youverify_ecommerce_network
+    volumes:
+      - ./payment-service:/app
+      - /app/node_modules
+
+  transaction-worker:
+    build: ./transaction-worker
+    container_name: transaction_worker
+    environment:
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      NODE_ENV: development
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - youverify_ecommerce_network
+    volumes:
+      - ./transaction-worker:/app
+      - /app/node_modules
+
+networks:
+  youverify_ecommerce_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  rabbitmq_data:
