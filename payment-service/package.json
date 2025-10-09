@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon --legacy-watch",
     "start": "node dist/index.js",
     "build": "tsc",
     "seed": "ts-node src/seed.ts",
@@ -29,6 +29,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "mongodb-memory-server": "^10.2.3",
     "morgan": "^1.10.1"
   }
 }

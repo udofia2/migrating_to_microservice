@@ -8,7 +8,7 @@ import customerRoutes from "./routes/customerRoutes";
 dotenv.config();
 
 const app: Application = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.CUSTOMER_SERVICE_PORT || 3001;
 
 app.use(cors());
 app.use(express.json());

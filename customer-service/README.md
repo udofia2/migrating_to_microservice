@@ -16,3 +16,13 @@ npm test
 # Start with Docker
 cd ..
 docker-compose up --build customer-service
+
+
+# Health check
+curl http://localhost:3001/health
+
+# Get all customers
+curl http://localhost:3001/customers
+
+# Get specific customer (use ID from seed output)
+curl http://localhost:3001/customers/<CUSTOMER_ID>
