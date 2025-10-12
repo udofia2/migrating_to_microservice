@@ -10,9 +10,9 @@ export const connectDatabase = async (): Promise<void> => {
     
     await mongoose.connect(mongoUri);
     
-    console.log('Customer Service: MongoDB connected successfully');
+    console.log('Order Service: MongoDB connected successfully');
   } catch (error) {
-    console.error('Customer Service: MongoDB connection error:', error);
+    console.error('Order Service: MongoDB connection error:', error);
     process.exit(1);
   }
 };
@@ -23,7 +23,7 @@ export const connectDatabase = async (): Promise<void> => {
 export const closeDatabase = async (): Promise<void> => {
   try {
     await mongoose.connection.close();
-    console.log('Customer Service: MongoDB connection closed');
+    console.log('Order Service: MongoDB connection closed');
   } catch (error) {
     console.error('Error closing MongoDB connection:', error);
   }

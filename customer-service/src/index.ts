@@ -8,8 +8,8 @@ import customerRoutes from "./routes/customerRoutes";
 dotenv.config();
 
 const app: Application = express();
-const PORT = process.env.CUSTOMER_SERVICE_PORT || 3001;
-
+const PORT = process.env.CUSTOMER_SERVICE_PORT || 3005;
+console.log(process.env.CUSTOMER_SERVICE_PORT);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,8 +38,8 @@ const startServer = async () => {
     await connectDatabase();
 
     app.listen(PORT, () => {
-      console.log(`🚀 Customer Service running on port ${PORT}`);
-      console.log(`📍 Health check: http://localhost:${PORT}/health`);
+      console.log(`Customer Service running on port ${PORT}`);
+      console.log(`Health check: http://localhost:${PORT}/health`);
     });
   } catch (error) {
     console.error("Failed to start server:", error);

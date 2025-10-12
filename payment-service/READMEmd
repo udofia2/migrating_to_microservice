@@ -1,0 +1,46 @@
+# Build the service
+cd payment-service
+npm install
+npm run build
+
+# Run tests
+npm test
+
+# Start with Docker
+cd ..
+docker-compose up --build payment-service rabbitmq
+
+
+
+# Build the service
+cd payment-service
+npm install
+npm run build
+
+# Run tests
+npm test
+
+# Start with Docker
+cd ..
+docker-compose up --build payment-service rabbitmq
+
+
+
+# 1. Get a customer ID
+curl http://localhost:3001/customers | jq '.data[0]._id'
+
+# 2. Get a product ID
+curl http://localhost:3002/products | jq '.data[0]._id'
+
+# 3. Create an order (replace IDs)
+curl -X POST http://localhost:3003/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customerId": "YOUR_CUSTOMER_ID",
+    "productId": "YOUR_PRODUCT_ID",
+    "amount": 50000
+  }'
+
+# 4. Check RabbitMQ for transaction message
+# Visit: http://localhost:15672
+# Check transaction_queue - you should see messages

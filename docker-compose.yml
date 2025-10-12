@@ -40,10 +40,10 @@ services:
     build: ./customer-service
     container_name: customer_service
     ports:
-      - "3001:3001"
+      - "3005:3005"
     environment:
-      PORT: 3001
-      MONGO_URI: mongodb://youverify:youverify123@mongodb:27019/ecommerce?authSource=admin
+      PORT: 3005
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
       NODE_ENV: development
     depends_on:
       mongodb:
@@ -61,7 +61,7 @@ services:
       - "3002:3002"
     environment:
       PORT: 3002
-      MONGO_URI: mongodb://youverify:youverify123@mongodb:27019/ecommerce?authSource=admin
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
       NODE_ENV: development
     depends_on:
       mongodb:
@@ -79,7 +79,7 @@ services:
       - "3003:3003"
     environment:
       PORT: 3003
-      MONGO_URI: mongodb://youverify:youverify123@mongodb:27019/ecommerce?authSource=admin
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
       PAYMENT_SERVICE_URL: http://payment-service:3004
       NODE_ENV: development
     depends_on:
@@ -113,7 +113,7 @@ services:
     build: ./transaction-worker
     container_name: transaction_worker
     environment:
-      MONGO_URI: mongodb://youverify:youverify123@mongodb:27019/ecommerce?authSource=admin
+      MONGO_URI: mongodb://youverify:youverify123@mongodb:27017/ecommerce?authSource=admin
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       NODE_ENV: development
     depends_on:
