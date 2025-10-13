@@ -29,7 +29,6 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   } catch (error: any) {
     console.error('Error fetching customer:', error);
     
-    // Handle invalid ObjectId format
     if (error.name === 'CastError') {
       res.status(400).json({
         success: false,
