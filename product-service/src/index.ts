@@ -4,6 +4,8 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import { connectDatabase } from "./config/database";
 import productRoutes from "./routes/productRoutes";
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger';
 
 dotenv.config();
 
@@ -15,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
@@ -23,6 +26,12 @@ app.get("/health", (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+  customSiteTitle: 'Product Service API Docs'
+}));
+
 
 app.use("/products", productRoutes);
 

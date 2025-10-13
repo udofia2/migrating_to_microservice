@@ -4,9 +4,32 @@ import { Customer } from '../models/Customer';
 const router = Router();
 
 /**
- * @route   GET /customers/:id
- * @desc    Get customer by ID
- * @access  Public
+ * @swagger
+ * /customers/{id}:
+ *   get:
+ *     summary: Get customer by ID
+ *     tags: [Customers]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Customer MongoDB ID
+ *     responses:
+ *       200:
+ *         description: Customer details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/Customer'
+ *       404:
+ *         description: Customer not found
  */
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
@@ -46,9 +69,29 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 });
 
 /**
- * @route   GET /customers
- * @desc    Get all customers (optional - for testing)
- * @access  Public
+ * @swagger
+ * /customers:
+ *   get:
+ *     summary: Get all customers
+ *     tags: [Customers]
+ *     responses:
+ *       200:
+ *         description: List of all customers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 count:
+ *                   type: integer
+ *                   example: 2
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Customer'
  */
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {

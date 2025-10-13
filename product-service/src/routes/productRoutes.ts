@@ -4,9 +4,22 @@ import { Product } from "../models/Product";
 const router = Router();
 
 /**
- * @route   GET /products/:id
- * @desc    Get product by ID
- * @access  Public
+ * @swagger
+ * /products/{id}:
+ *   get:
+ *     summary: Get product by ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Product details
+ *       404:
+ *         description: Product not found
  */
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   try {
@@ -56,9 +69,27 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
 });
 
 /**
- * @route   GET /products
- * @desc    Get all products with optional filters
- * @access  Public
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: Get all active products
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: List of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 count:
+ *                   type: integer
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Product'
  */
 router.get("/", async (req: Request, res: Response): Promise<void> => {
   try {
@@ -98,10 +129,47 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+
 /**
- * @route   GET /products/sku/:sku
- * @desc    Get product by SKU
- * @access  Public
+ * @swagger
+ * /products:
+ *   post:
+ *     summary: Create a new product (Joi validated)
+ *     tags: [Products]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - description
+ *               - price
+ *               - stock
+ *               - category
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *                 minLength: 10
+ *               price:
+ *                 type: number
+ *                 minimum: 0
+ *               stock:
+ *                 type: integer
+ *                 minimum: 0
+ *               category:
+ *                 type: string
+ *               imageUrl:
+ *                 type: string
+ *                 format: uri
+ *     responses:
+ *       201:
+ *         description: Product created
+ *       400:
+ *         description: Validation error
  */
 router.get("/sku/:sku", async (req: Request, res: Response): Promise<void> => {
   try {

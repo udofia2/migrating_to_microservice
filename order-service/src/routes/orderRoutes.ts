@@ -4,10 +4,72 @@ import { PaymentClient } from '../services/paymentClient';
 
 const router = Router();
 
+
 /**
- * @route   POST /orders
- * @desc    Create a new order
- * @access  Public
+ * @swagger
+ * /orders:
+ *   post:
+ *     summary: Create a new order (Main Flow - Joi Validated)
+ *     tags: [Orders]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/OrderRequest'
+ *     responses:
+ *       201:
+ *         description: Order created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Order created successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/OrderResponse'
+ *       400:
+ *         description: Validation error (Joi) or business logic error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Order validation failed
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: customerId
+ *                       message:
+ *                         type: string
+ *                         example: customerId must be a valid MongoDB ObjectId
+ *       404:
+ *         description: Customer or product not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Customer not found
  */
 router.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
@@ -113,10 +175,25 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+
 /**
- * @route   GET /orders/:id
- * @desc    Get order by order ID or MongoDB _id
- * @access  Public
+ * @swagger
+ * /orders/{orderId}:
+ *   get:
+ *     summary: Get order by order ID
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: ORD-1634567890-1234
+ *     responses:
+ *       200:
+ *         description: Order details
+ *       404:
+ *         description: Order not found
  */
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
@@ -160,10 +237,29 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+
 /**
- * @route   GET /orders
- * @desc    Get all orders with optional filters
- * @access  Public
+ * @swagger
+ * /orders:
+ *   get:
+ *     summary: Get all orders
+ *     tags: [Orders]
+ *     responses:
+ *       200:
+ *         description: List of all orders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 count:
+ *                   type: integer
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/OrderResponse'
  */
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
