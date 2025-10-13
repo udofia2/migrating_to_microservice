@@ -4,7 +4,7 @@ Youverify microservices-based e-commerce system with asynchronous communication 
 
 ## Architecture
 
-- **Customer Service** (Port 3001): Manages customer data
+- **Customer Service** (Port 3005): Manages customer data
 - **Product Service** (Port 3002): Manages product catalog
 - **Order Service** (Port 3003): Handles order creation
 - **Payment Service** (Port 3004): Processes payments

@@ -27,7 +27,7 @@ docker-compose up --build payment-service rabbitmq
 
 
 # 1. Get a customer ID
-curl http://localhost:3001/customers | jq '.data[0]._id'
+curl http://localhost:3005/customers | jq '.data[0]._id'
 
 # 2. Get a product ID
 curl http://localhost:3002/products | jq '.data[0]._id'

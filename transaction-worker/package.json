@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon --legacy-watch",
     "start": "node dist/index.js",
     "build": "tsc",
     "test": "jest --coverage"
@@ -19,11 +19,14 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.7.0",
     "@types/supertest": "^6.0.3",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@types/amqplib": "^0.10.7",
     "amqplib": "^0.10.9",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

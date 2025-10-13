@@ -1,21 +1,60 @@
-import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import { connectDatabase, closeDatabase } from './config/database';
+import { connectRabbitMQ, consumeFromQueue, closeRabbitMQ } from './config/rabbitmq';
+import { processTransaction } from './consumer';
 
-// Load environment variables from .env file
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+/**
+ * Starts the transaction worker
+ */
+const startWorker = async (): Promise<void> => {
+  try {
+    console.log(' Starting Transaction Worker...');
 
-// Middleware
-app.use(express.json());
+    await connectDatabase();
 
-// Health check route
-app.get('/', (req: Request, res: Response) => {
-  res.send('Payment Service is running 🚀');
+    await connectRabbitMQ();
+
+    // Start consuming messages
+    await consumeFromQueue(processTransaction);
+
+    console.log('Transaction Worker is running and listening for messages');
+
+  } catch (error) {
+    console.error('Failed to start Transaction Worker:', error);
+    process.exit(1);
+  }
+};
+
+/**
+ * Graceful shutdown handler
+ */
+const shutdown = async (): Promise<void> => {
+  console.log('\ Shutting down Transaction Worker gracefully...');
+  
+  try {
+    await closeRabbitMQ();
+    await closeDatabase();
+    console.log('Transaction Worker shut down successfully');
+    process.exit(0);
+  } catch (error) {
+    console.error('Error during shutdown:', error);
+    process.exit(1);
+  }
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  shutdown();
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is listening on port ${PORT}`);
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  shutdown();
 });
+
+startWorker();

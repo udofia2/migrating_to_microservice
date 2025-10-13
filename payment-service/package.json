@@ -15,12 +15,16 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@types/amqplib": "^0.10.7",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.7.0",
     "@types/supertest": "^6.0.3",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
@@ -30,6 +34,8 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongodb-memory-server": "^10.2.3",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "supertest": "^7.1.4",
+    "uuid": "^13.0.0"
   }
 }

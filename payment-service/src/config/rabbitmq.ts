@@ -1,7 +1,7 @@
 import * as amqp from 'amqplib';
-import { Channel, ChannelModel } from 'amqplib';  // Import ChannelModel for connection
+import { Channel, ChannelModel } from 'amqplib';
 
-let connection: ChannelModel | null = null;  // Use ChannelModel instead of Connection
+let connection: ChannelModel | null = null;
 let channel: Channel | null = null;
 
 const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://localhost:5672';

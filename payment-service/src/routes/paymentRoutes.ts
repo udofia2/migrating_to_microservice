@@ -1,17 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { publishToQueue } from '../config/rabbitmq';
 import { v4 as uuidv4 } from 'uuid';
+import { PaymentStatus } from '../types/enums';
 
 const router = Router();
-
-/**
- * Payment status enum
- */
-enum PaymentStatus {
-  SUCCESS = 'success',
-  FAILED = 'failed',
-  PROCESSING = 'processing'
-}
 
 /**
  * @route   POST /payments
@@ -40,8 +32,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    console.log(`💳 Processing payment for Order: ${orderId}`);
-    console.log(`   Customer: ${customerId}, Amount: ₦${amount.toLocaleString()}`);
+    console.log(`Processing payment for Order: ${orderId}`);
+    console.log(`Customer: ${customerId}, Amount: ₦${amount.toLocaleString()}`);
 
     // Generate unique payment/transaction ID
     const paymentId = `PAY-${Date.now()}-${uuidv4().substring(0, 8).toUpperCase()}`;
@@ -51,7 +43,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     const isSuccess = Math.random() > 0.1;
     const paymentStatus = isSuccess ? PaymentStatus.SUCCESS : PaymentStatus.FAILED;
 
-    console.log(`   Payment Status: ${paymentStatus}`);
+    console.log(`Payment Status: ${paymentStatus}`);
 
     // Prepare transaction details for queue
     const transactionDetails = {
@@ -75,7 +67,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       console.log(`Transaction details published to queue: ${transactionId}`);
     } catch (queueError) {
       console.error('Failed to publish to queue:', queueError);
-      // Continue processing even if queue fails
+      // NOTE: Continue processing even if queue fails
     }
 
     // Return payment response

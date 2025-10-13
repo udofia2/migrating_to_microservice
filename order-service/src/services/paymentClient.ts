@@ -1,26 +1,8 @@
 import axios, { AxiosError } from 'axios';
+import { PaymentRequest, PaymentResponse } from '../types/payment.interface';
 
 const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL || 'http://localhost:3004';
 
-/**
- * Payment request interface
- */
-interface PaymentRequest {
-  customerId: string;
-  orderId: string;
-  productId: string;
-  amount: number;
-}
-
-/**
- * Payment response interface
- */
-interface PaymentResponse {
-  success: boolean;
-  paymentId: string;
-  status: string;
-  message?: string;
-}
 
 /**
  * Payment client for communicating with Payment Service
