@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Customer } from '../models/Customer';
+import { validate } from '../middleware/validation';
+import { customerIdSchema } from '../validation/customer';
 
 const router = Router();
 
@@ -31,7 +33,7 @@ const router = Router();
  *       404:
  *         description: Customer not found
  */
-router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+router.get('/:id', validate(customerIdSchema), async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 

@@ -1,5 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Product } from "../models/Product";
+import { validate } from "../middleware/validation";
+import { productIdSchema, skuSchema, productQuerySchema } from "../validation/product";
 
 const router = Router();
 
@@ -21,7 +23,7 @@ const router = Router();
  *       404:
  *         description: Product not found
  */
-router.get("/:id", async (req: Request, res: Response): Promise<void> => {
+router.get("/:id", validate(productIdSchema, 'params'), async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
@@ -35,7 +37,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Check if product is active
     if (!product.isActive) {
       res.status(404).json({
         success: false,
@@ -51,7 +52,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   } catch (error: any) {
     console.error("Error fetching product:", error);
 
-    // Handle invalid ObjectId format
     if (error.name === "CastError") {
       res.status(400).json({
         success: false,
@@ -91,11 +91,10 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
  *                   items:
  *                     $ref: '#/components/schemas/Product'
  */
-router.get("/", async (req: Request, res: Response): Promise<void> => {
+router.get("/", validate(productQuerySchema, 'query'), async (req: Request, res: Response): Promise<void> => {
   try {
     const { category, minPrice, maxPrice, inStock } = req.query;
 
-    // Build filter object
     const filter: any = { isActive: true };
 
     if (category) {
@@ -171,7 +170,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
  *       400:
  *         description: Validation error
  */
-router.get("/sku/:sku", async (req: Request, res: Response): Promise<void> => {
+router.get("/sku/:sku", validate(skuSchema, 'params'), async (req: Request, res: Response): Promise<void> => {
   try {
     const { sku } = req.params;
 

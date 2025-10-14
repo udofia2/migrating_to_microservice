@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { Order, OrderStatus } from '../models/Order';
 import { PaymentClient } from '../services/paymentClient';
+import { validate } from '../middleware/validation';
+import { createOrderSchema, orderIdSchema, orderQuerySchema } from '../validation/order';
 
 const router = Router();
 
@@ -71,32 +73,12 @@ const router = Router();
  *                   type: string
  *                   example: Customer not found
  */
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/', validate(createOrderSchema), async (req: Request, res: Response): Promise<void> => {
   try {
     const { customerId, productId, amount } = req.body;
 
-    // Validate required fields
-    if (!customerId || !productId || !amount) {
-      res.status(400).json({
-        success: false,
-        message: 'Missing required fields: customerId, productId, amount'
-      });
-      return;
-    }
-
-    // Validate amount
-    if (typeof amount !== 'number' || amount <= 0) {
-      res.status(400).json({
-        success: false,
-        message: 'Amount must be a positive number'
-      });
-      return;
-    }
-
-    // Generate unique order ID
     const orderId = (Order as any).generateOrderId();
 
-    // Create order with pending status
     const order = await Order.create({
       orderId,
       customerId,
@@ -116,7 +98,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     })
       .then((paymentResponse) => {
         console.log(`Payment initiated for order ${orderId}: ${paymentResponse.paymentId}`);
-        // Update order with payment ID (optional - in background)
+
         Order.findOneAndUpdate(
           { orderId },
           { paymentId: paymentResponse.paymentId }
@@ -124,14 +106,13 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       })
       .catch((error) => {
         console.error(`Payment initiation failed for order ${orderId}:`, error.message);
-        // Update order status to failed (optional - in background)
+        
         Order.findOneAndUpdate(
           { orderId },
           { orderStatus: OrderStatus.FAILED }
         ).catch(err => console.error('Error updating order status:', err));
       });
 
-    // Return response immediately to customer
     res.status(201).json({
       success: true,
       message: 'Order created successfully',
@@ -195,7 +176,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
  *       404:
  *         description: Order not found
  */
-router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+router.get('/:id', validate(orderIdSchema, 'params'), async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
@@ -261,7 +242,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
  *                   items:
  *                     $ref: '#/components/schemas/OrderResponse'
  */
-router.get('/', async (req: Request, res: Response): Promise<void> => {
+router.get('/', validate(orderQuerySchema, 'query'), async (req: Request, res: Response): Promise<void> => {
   try {
     const { customerId, orderStatus, limit = '50', page = '1' } = req.query;
 
