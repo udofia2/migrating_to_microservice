@@ -6,6 +6,7 @@ import { connectDatabase } from "./config/database";
 import productRoutes from "./routes/productRoutes";
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
+import { NextFunction } from "express-serve-static-core";
 
 dotenv.config();
 
@@ -27,13 +28,25 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  explorer: true,
-  customSiteTitle: 'Product Service API Docs'
-}));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+//   explorer: true,
+//   customSiteTitle: 'Product Service API Docs'
+// }));
 
+app.use('/api-docs', (req: Request, res: Response, next: NextFunction) => {
+  const basePath = req.get('X-Swagger-Base-Path') || 'http://localhost:8080/api/products';
+  const swaggerDocument = {
+    ...swaggerSpec,
+    servers: [{ url: basePath }]
+  };
+  swaggerUi.setup(swaggerDocument, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Product Service API Docs'
+  })(req, res, next);
+}, swaggerUi.serve);
 
-app.use("/products", productRoutes);
+app.use("/", productRoutes);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({

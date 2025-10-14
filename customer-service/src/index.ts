@@ -6,6 +6,7 @@ import { connectDatabase } from "./config/database";
 import customerRoutes from "./routes/customerRoutes";
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
+import { NextFunction } from "express-serve-static-core";
 
 
 dotenv.config();
@@ -18,11 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  explorer: true,
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Customer Service API Docs'
-}));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+//   explorer: true,
+//   customCss: '.swagger-ui .topbar { display: none }',
+//   customSiteTitle: 'Customer Service API Docs'
+// }));
 
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
@@ -33,7 +34,20 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-app.use("/customers", customerRoutes);
+app.use('/api-docs', (req: Request, res: Response, next: NextFunction) => {
+  const basePath = req.get('X-Swagger-Base-Path') || 'http://localhost:8080/api/customers';
+  const swaggerDocument = {
+    ...swaggerSpec,
+    servers: [{ url: basePath }]
+  };
+  swaggerUi.setup(swaggerDocument, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Customer Service API Docs'
+  })(req, res, next);
+}, swaggerUi.serve);
+
+app.use("/", customerRoutes);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({

@@ -4,6 +4,9 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { connectRabbitMQ, closeRabbitMQ } from './config/rabbitmq';
 import paymentRoutes from './routes/paymentRoutes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger';
+import { NextFunction } from 'express-serve-static-core';
 
 dotenv.config();
 
@@ -24,7 +27,20 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-app.use('/payments', paymentRoutes);
+app.use('/api-docs', (req: Request, res: Response, next: NextFunction) => {
+  const basePath = req.get('X-Swagger-Base-Path') || 'http://localhost:8080/api/payments';
+  const swaggerDocument = {
+    ...swaggerSpec,
+    servers: [{ url: basePath }]
+  };
+  swaggerUi.setup(swaggerDocument, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Payment Service API Docs'
+  })(req, res, next);
+}, swaggerUi.serve);
+
+app.use('/', paymentRoutes);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({
