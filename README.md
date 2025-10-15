@@ -16,7 +16,7 @@ Youverify microservices-based e-commerce system with asynchronous communication 
 - Node.js 18+ (for local development)
 
 ## Start the service
-- run `docker-compose up build`
+- run `docker-compose up --build`
 - visit localhost:8080/docs - for documentation
 - visit localhost:8080/api/serviceName - example localhost:8080/api/customers
 
