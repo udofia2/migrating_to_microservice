@@ -19,13 +19,13 @@ docker-compose up --build product-service
 curl http://localhost:3002/health
 
 # Get all products
-curl http://localhost:3002/products
+curl http://localhost:3002/
 
 # Get specific product (use ID from seed output)
-curl http://localhost:3002/products/<PRODUCT_ID>
+curl http://localhost:3002/<PRODUCT_ID>
 
 # Get product by SKU
-curl http://localhost:3002/products/sku/SAMS23U-BLK-256
+curl http://localhost:3002//sku/SAMS23U-BLK-256
 
 # Filter by category
-curl http://localhost:3002/products?category=Electronics
+curl http://localhost:3002?category=Electronics

@@ -35,12 +35,12 @@ echo ""
 echo "${YELLOW}Test 2: Fetching Customer and Product${NC}"
 echo "----------------------------------------"
 
-CUSTOMER_ID=$(curl -s http://localhost:3005/customers | jq -r '.data[0]._id')
+CUSTOMER_ID=$(curl -s http://localhost:3005 | jq -r '.data[0]._id')
 echo "Customer ID: ${CUSTOMER_ID}"
 
-PRODUCT_ID=$(curl -s http://localhost:3002/products | jq -r '.data[0]._id')
-PRODUCT_NAME=$(curl -s http://localhost:3002/products | jq -r '.data[0].name')
-PRODUCT_PRICE=$(curl -s http://localhost:3002/products | jq -r '.data[0].price')
+PRODUCT_ID=$(curl -s http://localhost:3002 | jq -r '.data[0]._id')
+PRODUCT_NAME=$(curl -s http://localhost:3002 | jq -r '.data[0].name')
+PRODUCT_PRICE=$(curl -s http://localhost:3002 | jq -r '.data[0].price')
 echo "Product ID: ${PRODUCT_ID}"
 echo "Product: ${PRODUCT_NAME} (₦${PRODUCT_PRICE})"
 
@@ -49,7 +49,7 @@ echo ""
 echo "${YELLOW}Test 3: Creating Order${NC}"
 echo "----------------------------------------"
 
-ORDER_RESPONSE=$(curl -s -X POST http://localhost:3003/orders \
+ORDER_RESPONSE=$(curl -s -X POST http://localhost:3003 \
   -H "Content-Type: application/json" \
   -d "{
     \"customerId\": \"${CUSTOMER_ID}\",

@@ -25,10 +25,10 @@ curl -X POST http://localhost:3003/orders \
   }'
 
 # Get order by orderId
-curl http://localhost:3003/orders/ORD-20251009-XXXXXX
+curl http://localhost:3003/ORD-20251009-XXXXXX
 
 # Get all orders
-curl http://localhost:3003/orders
+curl http://localhost:3003
 
 # Get orders for specific customer
-curl http://localhost:3003/orders?customerId=YOUR_CUSTOMER_ID
+curl http://localhost:3003?customerId=YOUR_CUSTOMER_ID

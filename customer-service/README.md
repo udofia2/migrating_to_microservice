@@ -22,7 +22,7 @@ docker-compose up --build customer-service
 curl http://localhost:3005/health
 
 # Get all customers
-curl http://localhost:3005/customers
+curl http://localhost:3005/
 
 # Get specific customer (use ID from seed output)
-curl http://localhost:3005/customers/<CUSTOMER_ID>
+curl http://localhost:3005/<CUSTOMER_ID>
