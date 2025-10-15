@@ -10,9 +10,9 @@ const router = Router();
 
 /**
  * @swagger
- * /payments:
+ * /:
  *   post:
- *     summary: Process payment and publish to queue (Joi Validated)
+ *     summary: Process payment and publish to queue
  *     tags: [Payments]
  *     requestBody:
  *       required: true
@@ -28,7 +28,7 @@ const router = Router();
  *       402:
  *         description: Payment failed
  */
-router.post('/', validate(processPaymentSchema), async (req: Request, res: Response): Promise<void> => {
+router.post('/',  async (req: Request, res: Response): Promise<void> => {
   try {
     const { customerId, orderId, productId, amount } = req.body;
 
@@ -94,7 +94,7 @@ router.post('/', validate(processPaymentSchema), async (req: Request, res: Respo
 
 /**
  * @swagger
- * /payments/{paymentId}:
+ * /{paymentId}:
  *   get:
  *     summary: Get payment status (mock endpoint)
  *     tags: [Payments]
@@ -108,7 +108,7 @@ router.post('/', validate(processPaymentSchema), async (req: Request, res: Respo
  *       200:
  *         description: Payment details
  */
-router.get('/:paymentId', validate(paymentIdSchema, 'params'), async (req: Request, res: Response): Promise<void> => {
+router.get('/:paymentId', async (req: Request, res: Response): Promise<void> => {
   try {
     const { paymentId } = req.params;
 

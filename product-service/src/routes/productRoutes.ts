@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- * /products/{id}:
+ * /{id}:
  *   get:
  *     summary: Get product by ID
  *     tags: [Products]
@@ -70,7 +70,7 @@ router.get("/:id", validate(productIdSchema, 'params'), async (req: Request, res
 
 /**
  * @swagger
- * /products:
+ * /:
  *   get:
  *     summary: Get all active products
  *     tags: [Products]
@@ -91,7 +91,7 @@ router.get("/:id", validate(productIdSchema, 'params'), async (req: Request, res
  *                   items:
  *                     $ref: '#/components/schemas/Product'
  */
-router.get("/", validate(productQuerySchema, 'query'), async (req: Request, res: Response): Promise<void> => {
+router.get("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const { category, minPrice, maxPrice, inStock } = req.query;
 
@@ -131,9 +131,9 @@ router.get("/", validate(productQuerySchema, 'query'), async (req: Request, res:
 
 /**
  * @swagger
- * /products:
+ * /:
  *   post:
- *     summary: Create a new product (Joi validated)
+ *     summary: Create a new produc
  *     tags: [Products]
  *     requestBody:
  *       required: true

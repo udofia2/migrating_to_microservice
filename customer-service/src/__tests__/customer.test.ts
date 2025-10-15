@@ -1,15 +1,21 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import app from "../index";
 import { Customer } from "../models/Customer";
 
 let mongoServer: MongoMemoryServer;
+let app: any;
 
 beforeAll(async () => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
+
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   await mongoose.connect(mongoUri);
+
+  app = (await import("./../index")).default;
 });
 
 afterAll(async () => {
@@ -69,6 +75,7 @@ describe("Customer Service API", () => {
 
       expect(response.status).toBe(400);
       expect(response.body.success).toBe(false);
+      expect(response.body.message).toBe("Validation failed");
     });
   });
 

@@ -6,7 +6,7 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: 'Order Service API',
       version: '1.0.0',
-      description: 'Order orchestration microservice with Joi validation and REST communication'
+      description: 'Order orchestration microservice with REST communication'
     },
     servers: [
       {
@@ -23,20 +23,20 @@ const options: swaggerJsdoc.Options = {
             customerId: {
               type: 'string',
               pattern: '^[0-9a-fA-F]{24}$',
-              description: 'Valid MongoDB ObjectId (Joi validated)',
+              description: 'Valid MongoDB ObjectId',
               example: '507f191e810c19729de860ea'
             },
             productId: {
               type: 'string',
               pattern: '^[0-9a-fA-F]{24}$',
-              description: 'Valid MongoDB ObjectId (Joi validated)',
+              description: 'Valid MongoDB ObjectId',
               example: '507f191e810c19729de860eb'
             },
             amount: {
               type: 'number',
               format: 'float',
               minimum: 0,
-              description: 'Order amount (Joi validated positive number)',
+              description: 'Order amount (positive number)',
               example: 1299.99
             },
             quantity: {

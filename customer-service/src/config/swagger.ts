@@ -6,7 +6,7 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: 'Customer Service API',
       version: '1.0.0',
-      description: 'Youverify Microservice for e-commerce platform with Joi validation',
+      description: 'Youverify Microservice for e-commerce platform',
       contact: {
         name: 'API Support',
         email: 'support@example.com'
@@ -49,10 +49,10 @@ const options: swaggerJsdoc.Options = {
               type: 'object',
               properties: {
                 street: { type: 'string', example: '123 Main St' },
-                city: { type: 'string', example: 'New York' },
-                state: { type: 'string', example: 'NY' },
+                city: { type: 'string', example: 'Lagos State' },
+                state: { type: 'string', example: 'LG' },
                 zipCode: { type: 'string', example: '10001' },
-                country: { type: 'string', example: 'USA' }
+                country: { type: 'string', example: 'Nigeria' }
               }
             },
             createdAt: {

@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- * /customers/{id}:
+ * /{id}:
  *   get:
  *     summary: Get customer by ID
  *     tags: [Customers]
@@ -72,7 +72,7 @@ router.get('/:id', validate(customerIdSchema), async (req: Request, res: Respons
 
 /**
  * @swagger
- * /customers:
+ * /:
  *   get:
  *     summary: Get all customers
  *     tags: [Customers]

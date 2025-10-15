@@ -23,7 +23,7 @@ const options: swaggerJsdoc.Options = {
             customerId: {
               type: 'string',
               pattern: '^[0-9a-fA-F]{24}$',
-              description: 'Customer MongoDB ObjectId (Joi validated)',
+              description: 'Customer MongoDB ObjectId',
               example: '507f191e810c19729de860ea'
             },
             orderId: {
@@ -34,13 +34,13 @@ const options: swaggerJsdoc.Options = {
             productId: {
               type: 'string',
               pattern: '^[0-9a-fA-F]{24}$',
-              description: 'Product MongoDB ObjectId (Joi validated)',
+              description: 'Product MongoDB ObjectId',
               example: '507f191e810c19729de860eb'
             },
             amount: {
               type: 'number',
               minimum: 0,
-              description: 'Payment amount (Joi validated)',
+              description: 'Payment amount',
               example: 1299.99
             }
           }

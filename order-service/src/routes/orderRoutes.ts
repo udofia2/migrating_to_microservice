@@ -9,9 +9,9 @@ const router = Router();
 
 /**
  * @swagger
- * /orders:
+ * /:
  *   post:
- *     summary: Create a new order (Main Flow - Joi Validated)
+ *     summary: Create a new order (Main Flow 
  *     tags: [Orders]
  *     requestBody:
  *       required: true
@@ -89,7 +89,7 @@ router.post('/', validate(createOrderSchema), async (req: Request, res: Response
 
     console.log(`Order created: ${orderId} for customer: ${customerId}`);
 
-    // Initiate payment processing (async - don't wait for completion)
+    
     PaymentClient.processPayment({
       customerId,
       orderId,
@@ -129,7 +129,7 @@ router.post('/', validate(createOrderSchema), async (req: Request, res: Response
   } catch (error: any) {
     console.error('Error creating order:', error);
     
-    // Handle duplicate order ID (unlikely but possible)
+    
     if (error.code === 11000) {
       res.status(409).json({
         success: false,
@@ -138,7 +138,7 @@ router.post('/', validate(createOrderSchema), async (req: Request, res: Response
       return;
     }
 
-    // Handle validation errors
+    
     if (error.name === 'ValidationError') {
       res.status(400).json({
         success: false,
@@ -159,7 +159,7 @@ router.post('/', validate(createOrderSchema), async (req: Request, res: Response
 
 /**
  * @swagger
- * /orders/{orderId}:
+ * /{orderId}:
  *   get:
  *     summary: Get order by order ID
  *     tags: [Orders]
@@ -221,7 +221,7 @@ router.get('/:id', validate(orderIdSchema, 'params'), async (req: Request, res: 
 
 /**
  * @swagger
- * /orders:
+ * /:
  *   get:
  *     summary: Get all orders
  *     tags: [Orders]
@@ -242,7 +242,7 @@ router.get('/:id', validate(orderIdSchema, 'params'), async (req: Request, res: 
  *                   items:
  *                     $ref: '#/components/schemas/OrderResponse'
  */
-router.get('/', validate(orderQuerySchema, 'query'), async (req: Request, res: Response): Promise<void> => {
+router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const { customerId, orderStatus, limit = '50', page = '1' } = req.query;
 

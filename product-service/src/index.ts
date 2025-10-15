@@ -28,10 +28,10 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-//   explorer: true,
-//   customSiteTitle: 'Product Service API Docs'
-// }));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+  customSiteTitle: 'Product Service API Docs'
+}));
 
 app.use('/api-docs', (req: Request, res: Response, next: NextFunction) => {
   const basePath = req.get('X-Swagger-Base-Path') || 'http://localhost:8080/api/products';

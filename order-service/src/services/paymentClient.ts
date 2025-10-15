@@ -16,11 +16,11 @@ export class PaymentClient {
    */
   static async processPayment(paymentData: PaymentRequest): Promise<PaymentResponse> {
     try {
-      console.log(`Sending payment request to Payment Service: ${PAYMENT_SERVICE_URL}/payments`);
+      console.log(`Sending payment request to Payment Service: ${PAYMENT_SERVICE_URL}`);
       console.log(`   Order ID: ${paymentData.orderId}, Amount: ₦${paymentData.amount}`);
 
       const response = await axios.post<PaymentResponse>(
-        `${PAYMENT_SERVICE_URL}/payments`,
+        `${PAYMENT_SERVICE_URL}`,
         paymentData,
         {
           headers: {

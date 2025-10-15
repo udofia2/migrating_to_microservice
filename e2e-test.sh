@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🧪 Starting End-to-End Test..."
+echo " Starting End-to-End Test..."
 echo ""
 
 # Colors for output
@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Wait for services to be ready
-echo "⏳ Waiting for services to be ready..."
+echo " Waiting for services to be ready..."
 sleep 10
 
 # Test 1: Health checks
@@ -68,7 +68,7 @@ echo "----------------------------------------"
 sleep 5
 
 echo ""
-echo "${GREEN}✅ End-to-End Test Complete!${NC}"
+echo "${GREEN} End-to-End Test Complete!${NC}"
 echo ""
 echo "Summary:"
 echo "- Order Created: ${ORDER_ID}"
